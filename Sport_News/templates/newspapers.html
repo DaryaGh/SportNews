@@ -1,0 +1,27 @@
+{% extends 'Base.html' %}
+{% block title %}
+	NewsPapers
+{% endblock %}
+
+{% block main %}
+	<h1>NewsPaper SprtNews</h1>
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">
+                {{ newspaper }}
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                {{ newspaper.image_of_newspaper }}
+            </p>
+        </div>
+        <div class="card-footer">
+            <span class="small text-muted">
+                {{ newspaper.published_at }}
+            </span>
+        </div>
+
+
+    </div>
+{% endblock %}

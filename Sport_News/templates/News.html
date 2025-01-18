@@ -1,0 +1,108 @@
+{% extends 'Base.html' %}
+
+{% block title %}
+    News
+{% endblock %}
+
+{% block main %}
+    <h1>News SportNews</h1>
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">
+                {{ news }}
+                <span class="badge bg-success">{{ news.Category }}</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                {{ news.body }}
+            </p>
+        </div>
+        <div class="card-footer">
+            <span class="small text-muted">
+                {{ news.published_at }}
+                number of visited : {{ news.number_of_visited }}
+            </span>
+        </div>
+    </div>
+
+
+    <ul>
+        {% for tag in tags %}
+            <li>{{ tag }}</li>
+        {% endfor %}
+    </ul>
+
+    <div class="list-group my-4">
+        {% for comment in all_comments %}
+            <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class=" text-muted mb-1">{{ comment.body }} BY <small
+                            class="text-danger">{{ comment.user }}</small></h5>
+
+                    <small>{{ comment.published_at }}</small>
+
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="error_report">
+                        Report
+                    </button>
+                    <div id="error_report" class="modal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Report</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'register_Jorm' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="news_id" value="{{ comment.id }}">
+                                    <div class="mb-3">
+                                        <label for="Jorm-name" class="col-form-label"></label>
+                                        <select name="Jorm_id" id="form-select" id="Jorm-name">
+                                            {% for k , v in jorms.item %}
+                                                <option value="{{ k }}">{{ v }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <ul>
+                    {% for child_comment in comment.children %}
+                        <li class="text-danger">{{ child_comment.body }}</li>
+                    {% endfor %}
+                </ul>
+
+                {#    <p class="mb-1">{{ comment.reply_answer }} BY <small class="text-danger">{{ comment.user }}</small> </p>#}
+            </a>
+        {% endfor %}
+    </div>
+
+
+    {#    <ul class="list-group my-4">#}
+    {##}
+    {#        {% for comment in all_comments %}#}
+    {##}
+    {#            <li class="list-group-item">#}
+    {#                {{ comment.body }}#}
+    {#                <span class="badge bg-success">+{{ comment.like_count }}</span>#}
+    {#                <span class="badge bg-danger">-{{ comment.dislike_count }}</span>#}
+    {#            </li>#}
+    {##}
+    {#        {% endfor %}#}
+    {##}
+    {#    </ul>#}
+
+    {% if news.main_picture %}
+        <img src="{{ news.main_picture.url }}" class="card-img-bottom" alt="">
+    {% endif %}
+
+
+{% endblock %}

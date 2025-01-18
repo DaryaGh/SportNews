@@ -1,0 +1,42 @@
+{% extends 'Base.html' %}
+
+{% block title %}
+    Podcast
+{% endblock %}
+
+{% block main %}
+
+    <h1>Podcast SportNews</h1>
+
+    <div class="text-center">
+        <a href="{% url 'Podcast_Create' %}" class="btn btn-outline-danger">Add a New Podcast</a>
+    </div>
+
+    {% for i in podcasts %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    {{ i.title }}
+                    <span class="badge bg-success">{{ i.Category }}</span>
+                </h5>
+            </div>
+
+        <div class="card-body">
+            <p class="card-text">
+                {{ i.body }}
+            </p>
+
+            <a href="{% url 'podcast_detail' i.id %}" class="btn btn-outline-primary btn-lg">Read more</a>
+        </div>
+
+        <div class="card-footer ">
+                <span class="small text-muted">
+                    {{ i.published_at }}
+                </span>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}
+

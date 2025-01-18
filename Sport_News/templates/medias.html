@@ -1,0 +1,42 @@
+{% extends 'Base.html' %}
+
+{% block title %}
+     media
+{% endblock %}
+
+{% block main %}
+
+    <h1>Media SportNews</h1>
+
+    <div class="text-center">
+        <a href="{% url 'Media_Create' %}" class="btn btn-outline-danger">Add a New Media</a>
+    </div>
+
+    {% for media in medias %}
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    {{ media.title }}
+                    <a href="{%  url 'Media_list_by_cat' cat_id=media.Category_id %}">
+                        <span class="badge bg-success">{{ media.Category }}</span>
+                    </a>
+
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ media.body }}</p>
+                <a href="{% url 'Media_detail' media.id  %}" class="btn btn-outline-primary ">Read more</a>
+            </div>
+
+            <div class="card-footer ">
+                <span class="small text-muted">
+                    {{ media.published_at }}
+                </span>
+            </div>
+        </div>
+
+    {% endfor %}
+
+
+{% endblock %}

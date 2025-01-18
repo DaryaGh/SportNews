@@ -1,0 +1,76 @@
+{% extends 'Base.html' %}
+{% block title %}
+	News
+{% endblock %}
+
+{% block main %}
+    <h1>News SportNews</h1>
+
+
+    <div class="text-center">
+        <a href="{% url 'News_Create' %}" class="btn btn-outline-danger">Add a New News</a>
+    </div>
+
+    {% if newss|length > 0 %}
+
+    {% for news in newss %}
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    {{ news }}
+                    <a href="{% url 'News_list_by_cat' cat_id=news.Category_id %}">
+                        <span class="badge bg-success">{{ news.Category }}</span>
+                    </a>
+
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ news.body }}</p>
+                <a href="{% url 'News_detail' news.id  %}" class="btn btn-outline-primary ">Read more</a>
+            </div>
+
+            <div class="card-footer ">
+                <span class="small text-muted">
+                    {{ news.published_at }}
+                </span>
+            </div>
+        </div>
+{#        <ul class="list-group mt-4">#}
+{#        {% for comment in all_comments %}#}
+{#            <li class="list-group-item">#}
+{#                {{ comment.body }}#}
+{#            <span class="badge bg-success">+{{ comment.like_count }}</span>#}
+{#            <span class="badge bg-danger">-{{ comment.dislike_count }}</span>#}
+{#            </li>#}
+{##}
+{#        {% endfor %}#}
+{##}
+{#    </ul>#}
+
+    {% endfor %}
+
+    <nav aria-label="Page navigation ">
+        <ul class="pagination my-5 justify-content-center">
+            {% if newss.has_previous %}
+                <li class="page-item"><a class="page-link" href="{% url 'News_list' %}?p={{ newss.previous_page_number }}">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="{% url 'News_list' %}?p={{ newss.previous_page_number}}">{{ newss.previous_page_number }}</a></li>
+            {% endif %}
+
+            <li class="page-item"><a class="page-link active" href="{% url 'News_list' %}?p={{ newss.number }}">{{ newss.number }}</a></li>
+        
+            {% if newss.has_next %}
+                <li class="page-item"><a class="page-link" href="{% url 'News_list' %}?p={{ newss.next_page_number }}">{{ newss.next_page_number }}</a></li>
+                <li class="page-item"><a class="page-link" href="{% url 'News_list' %}?p={{ newss.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% else %}
+        <div class="alert alert-warning my-4">
+            No News
+        </div>
+
+    {% endif %}
+
+{% endblock %}

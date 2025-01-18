@@ -1,0 +1,31 @@
+{% extends 'Base.html' %}
+{% block title %}
+	ContactUs
+{% endblock %}
+
+{% block main %}
+	<h1>Contact SportNews</h1>
+    {% for i in contacts %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <p class="card-title">
+                    {{ i.related_unit }}
+                </p>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    {{ i.body }}
+                </p>
+
+                <a href="{% url 'contact_detail' i.id %}" class="btn btn-lg btn-outline-primary">Read more</a>
+            </div>
+
+            <div class="card-footer">
+                <span class="small text-muted">
+                    {{ i.published_at }}
+                </span>
+            </div>
+
+        </div>
+    {% endfor %}
+{% endblock %}

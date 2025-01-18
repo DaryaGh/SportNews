@@ -1,0 +1,34 @@
+{% extends 'Base.html' %}
+
+{% block title %}
+    NewsPaper sport
+{% endblock %}
+
+{% block main %}
+	<h1>NewsPaper SportNews</h1>
+    {% for newspaper in all_newspapers %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <p class="card-title">
+                    {{ newspaper.title }}
+                </p>
+            </div>
+
+            <div class="card-body">
+                <p class="card-text">
+                    {{ newspaper.image_of_newspaper }}
+                </p>
+
+                <a href="{% url 'newspaper_detail' newspaper.id %}" class="btn btn-outline-primary btn-lg">Read more</a>
+            </div>
+
+            <div class="card-footer">
+                <span class="small text-muted">
+                    {{ newspaper.published_at }}
+                </span>
+            </div>
+        </div>
+    {% endfor %}
+
+
+{% endblock %}

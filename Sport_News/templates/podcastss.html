@@ -1,0 +1,43 @@
+{%  extends 'Base.html' %}
+{% block title %}
+    Podcast
+{% endblock %}
+
+
+{% block main %}
+    <h1>Podcast SportNews</h1>
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">
+                {{ podcast }}
+                <span class="badge bg-success">{{ podcast.Category  }}</span>
+            </h5>
+        </div>
+
+        <div class="card-body">
+            <p class="card-text">
+                {{ podcast.body }}
+            </p>
+        </div>
+
+        <div class="card-footer">
+            <span class="small text-muted">
+                {{ podcast.published_at }}
+            </span>
+        </div>
+    </div>
+
+    <ul class="list-group mt-4">
+        {% for comment in all_comments %}
+            <li class="list-group-item">
+                {{ comment.body }}
+            <span class="badge bg-success">+{{ comment.like_count }}</span>
+            <span class="badge bg-danger">-{{ comment.dislike_count }}</span>
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+
+{% endblock %}

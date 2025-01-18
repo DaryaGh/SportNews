@@ -1,0 +1,81 @@
+{% extends 'Base.html' %}
+
+{% block title %}
+    PhotoGallery
+{% endblock %}
+
+{% block main %}
+    <h1>PhotoGallery in SportNews</h1>
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="card-title">
+                {{ all_photo__gallery }}
+                <span class="badge bg-success">{{ all_photo__gallery.Category }}</span>
+            </h5>
+        </div>
+
+
+        <div class="card-body">
+            <p class="card-text">
+                {{ all_photo__gallery.body }}
+            </p>
+        </div>
+
+        <div class="card-footer">
+            <span class="small text-muted">
+                {{ all_photo__gallery.published_at }}
+            </span>
+        </div>
+    </div>
+    <ul class="list-group mt-4">
+        {% for comment in all_comments %}
+            <li class="list-group-item">
+                {{ comment.body }}
+                <span class="badge bg-success">+{{ comment.like_count }}</span>
+                <span class="badge bg-danger">-{{ comment.dislike_count }}</span>
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+    <section class="container">
+        <div class="row">
+            <div class="col-8 mx-auto">
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        {% for m in sliders %}
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                                    class="{% if forloop.first %} active {% endif %}"
+                                    aria-current="true" aria-label="Slide 1"></button>
+                        {% endfor %}
+                    </div>
+                    <div class="carousel-inner">
+                        {% for m in sliders %}
+                            <div class="carousel-item {% if forloop.first %} active {% endif %}">
+                                <img src="{{ m.file.url }}" class="d-block w-100" alt="...">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>{{ m.title }}</h5>
+                                    <p>{{ m.body }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+

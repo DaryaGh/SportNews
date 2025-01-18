@@ -1,0 +1,27 @@
+{% extends 'Base.html' %}
+
+{% block title %}
+	Advertising
+{% endblock %}
+
+{% block main %}
+    <h1> Advertising SportNews</h1>
+
+    {% for i in all_advertising %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <p class="card-title">
+                    {{ i.title }}
+                </p>
+            </div>
+
+            <div class="card-footer">
+                <span class="small text-muted">
+                    {{ i.published_date_start }}
+                    {{ i.published_date_expire }}
+                </span>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

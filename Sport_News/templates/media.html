@@ -1,0 +1,45 @@
+{% extends 'Base.html' %}
+
+{% block title %}
+    {{ media }}
+{% endblock %}
+
+{% block main %}
+    <h1>Media SportNews</h1>
+
+    <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">
+                    {{ media }}
+
+                    <span class="badge bg-success">{{ media.Category  }}</span>
+
+                </h5>
+            </div>
+
+            <div class="card-body">
+                <p class="card-text">
+                    {{ media.body }}
+                </p>
+            </div>
+
+        <div class="card-footer">
+            <span class="small text-muted">
+                {{ media.published_at }}
+            </span>
+        </div>
+    </div>
+
+    <ul class="list-group mt-4">
+        {% for comment in all_comments %}
+            <li class="list-group-item">
+                {{ comment.body }}
+            <span class="badge bg-success">+{{ comment.like_count }}</span>
+            <span class="badge bg-danger">-{{ comment.dislike_count }}</span>
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+{% endblock %}

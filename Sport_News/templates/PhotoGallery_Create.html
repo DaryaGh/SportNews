@@ -1,0 +1,17 @@
+{% extends 'Base.html' %}
+
+{% block main %}
+
+	<h1>Create a PhotoGallery</h1>
+
+    <form action="" method="post">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">Submit</button>
+
+    </form>
+
+{% endblock %}
