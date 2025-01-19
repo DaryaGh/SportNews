@@ -190,6 +190,13 @@ def newspaper_detail(request , newspaper_id):
 
 def News_list(request , cat_id=None):
 
+    if request.method =='POST':
+        if request.POST['q'] != "":
+            q = request.POST['q']
+            print(News.objects.filter(is_approved=True)
+                  .filter(title__icontains = q)
+                  .order_by('-id'))
+
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('auth_login'))
 

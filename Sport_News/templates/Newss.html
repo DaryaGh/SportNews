@@ -8,8 +8,32 @@
 
 
     <div class="text-center">
-        <a href="{% url 'News_Create' %}" class="btn btn-outline-danger">Add a New News</a>
+        <a href="{% url 'News_Create' %}" class="btn btn-outline-danger">
+            Add a New News
+        </a>
     </div>
+
+    <section class="my-4">
+        <form class="row g-3" action="{% url 'News_list' %}" method="POST">
+            {% csrf_token %}
+            <div class="col-md-4">
+                <label for="search">Search</label>
+                <input type="text" class="form-control" name="q" id="search">
+            </div>
+            <div class="col-md-4">
+                <label for="search">Category</label>
+                <select class="form-control">
+                    <option>select a category...</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="search">Users..</label>
+                <select class="form-control">
+                    <option>select a User...</option>
+                </select>
+            </div>
+        </form>
+    </section>
 
     {% if newss|length > 0 %}
 
