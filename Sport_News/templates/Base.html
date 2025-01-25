@@ -35,29 +35,27 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'newspaper_list' %}">NewsPaper</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'Media_list' %}">Media</a>
-                </li>
-                {% if categories %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Media
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% for Category in categories %}
-                                <li>
-                                    <a class="dropdown-item"
-                                       href="{% url 'Media_list_by_cat' Category.id %}">{{ Category }}</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                            {% endfor %}
 
-                        </ul>
-                    </li>
-                {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Media
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'Media_list' %}">All</a>
+                        </li>
+                        {% for Category in categories %}
+                            <li>
+                                <a class="nav-link"
+                                   href="{% url 'Media_list_by_cat' Category.id %}">{{ Category }}</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'podcast_list' %}">Podcast</a>
@@ -67,31 +65,29 @@
                     <a class="nav-link" href="{% url 'PhotoGallery_sport' %}">PhotoGallery</a>
                 </li>
 
-                <li class="nav-item ">
-                    <a class="nav-link active" href="{% url 'News_list' %}">News</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        News
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'News_list' %}">All</a>
+                        </li>
+                        {% for Category in categories %}
+                            <li>
+                                <a class="nav-link"
+                                   href="{% url 'News_list_by_cat' Category.id %}">{{ Category }}</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </li>
-                {% if categories %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Category
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% for Category in categories %}
-                                <li>
-                                    <a class="dropdown-item"
-                                       href="{% url 'News_list_by_cat' Category.id %}">{{ Category }}</a>
 
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                            {% endfor %}
-
-                        </ul>
-                    </li>
-                {% endif %}
             </ul>
+
             <form method="get" action="{% url 'News_list' %}" class="d-flex" role="search">
                 {% csrf_token %}
                 <input name="query" class="form-control me-2" type="search" placeholder="Title / Body"
@@ -99,12 +95,13 @@
                 <button class="btn btn-outline-light me-2" type="submit">Search</button>
                 <a class="btn btn-outline-warning ms-2" type="submit" href="{% url 'Cancel_Search' %}">Cancel</a>
             </form>
-           {% if request.user.is_authenticated %}
-                <a href="{% url 'auth_logout' %}" class="btn btn-danger ms-2">Logout ({{ user.first_name }} {{ user.last_name }})</a>
-           {% else %}
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'auth_logout' %}" class="btn btn-danger ms-2">Logout
+                    ({{ user.first_name }} {{ user.last_name }})</a>
+            {% else %}
                 <a href="{% url 'auth_login' %}" class="btn btn-primary ms-2">Login</a>
                 <a href="{% url 'auth_register' %}" class="btn btn-secondary ms-2">Register</a>
-           {% endif %}
+            {% endif %}
 
             <a href="{% url 'Change_mode' %}" class="btn btn-outline-info ms-2">Change Theme</a>
         </div>

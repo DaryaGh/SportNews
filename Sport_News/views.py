@@ -1,10 +1,19 @@
+from django.shortcuts import get_object_or_404, render
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView , Response
+from .import serializers
 from django.core.paginator import Paginator
 from django.shortcuts import render , redirect
 from django.http import HttpResponse,HttpResponseRedirect
+from rest_framework.decorators import api_view
+
 from .models import NewsPaper, Podcast, News, Media, PhotoGallery, ContactUs, Advertising, Comment, Category, Slider,FileUpload,ReportingAViolation
 from .forms import NewsForm, MediaForm, PodcastForm , PhotoGalleryForm ,FileUploadForm
 from django.urls import reverse
 from django.db.models import Q
+
+from .serializers import NewsSerializer
+
 
 def advertising_list(request):
     advertisings = Advertising.objects.filter(id__range=(2,4)).values()
@@ -329,3 +338,43 @@ def register_Jorm (request):
         print(request)
     return HttpResponse('save')
 
+
+# APi
+
+@api_view(['GET' ,'POST'])
+def Newss_Api(request):
+    if request.method == "GET":
+        newss = (News.objects
+                 .select_related('Category')
+                 .filter(is_approved=True).order_by('-published_at'))
+        serialized_newss = NewsSerializer(newss, many=True)
+        # NewsSerializer()
+        return Response(serialized_newss.data)
+    elif request.method == 'POST':
+        # print(request.data)
+        serializer = NewsSerializer(data=request.data)
+        # print(serializer)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data , status=201)
+
+
+@api_view(['GET','POST','DELETE','PUT'])
+def News_Api(request , id):
+    # news = News.objects.get(pk=id)
+    # # print(news)
+    # serialized_news = NewsSerializer(news)
+    # return Response(serialized_news.data)
+    # return HttpResponse(id)
+
+
+    # try :
+    #     news = News.objects.get(pk=id)
+    #     serialized_news = NewsSerializer(news)
+    #     return Response(serialized_news.data)
+    # except News.DoesNotExist:
+    #     return  Response(status=404)
+
+    news = get_object_or_404(News, pk=id)
+    serialized_news = NewsSerializer(news)
+    return Response(serialized_news.data)

@@ -28,4 +28,8 @@ urlpatterns = [
     path('Home', views.Home , name='Home'),
     path('register_Jorm', views.register_Jorm , name='register_Jorm'),
 
+
+    # url for APIS
+    path('Api/Newss', views.Newss_Api , name='Newss_Api'),
+path('Api/News/<int:id>', views.News_Api , name='News_Api'),
 ]

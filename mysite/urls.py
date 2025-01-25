@@ -31,6 +31,8 @@ urlpatterns = [
 
     path('Account/',include('Account.urls')),
 
+    path('api-auth/', include('rest_framework.urls'))
+
 ] + debug_toolbar_urls() + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

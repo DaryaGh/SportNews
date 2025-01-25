@@ -27,6 +27,13 @@
         </div>
     </div>
 
+    <ul>
+        {% for tag in tags %}
+            <li>{{ tag }}</li>
+        {% endfor %}
+    </ul>
+
+
     <ul class="list-group mt-4">
         {% for comment in all_comments %}
             <li class="list-group-item">
