@@ -362,7 +362,7 @@ def register_Jorm(request):
         print(request)
     return HttpResponse('save')
 
-# APi
+# API
 
 @api_view(['GET', 'POST'])
 def Newss_Api(request):
@@ -395,23 +395,27 @@ def News_Api(request, id):
                 'message': 'Update Successfully'
             }, status=status.HTTP_200_OK)
     elif request.method == 'DELETE':
-        # tags
 
+
+        #check file exist or not
+        if news.main_picture is not None :
+            return Response({
+                'message': 'You have not to delete the main_picture'
+            } , status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+        # tags
         if news.tags.count() > 0:
             return Response({
                 'message': 'You have not to delete the tags'
             }, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        # images
 
-        # if news.images_news.count() > 0:
-        #     return Response({
-        #         'message' : 'You have not to delete the images'
-        #     } , status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         news.delete()
 
-        return Response({ 
+        return Response({
             'message': ' Deleted Successfully'
         },
             status=status.HTTP_204_NO_CONTENT)
