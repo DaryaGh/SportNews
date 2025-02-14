@@ -23,14 +23,14 @@ class CategorySerializer(serializers.ModelSerializer):
 class NewsSerializer(serializers.ModelSerializer):
     tags_count = serializers.SerializerMethodField()
     Category = serializers.StringRelatedField()
-
+    main_picture_address = serializers.SerializerMethodField(method_name='main_picture_address_new')
     # count_like = serializers.SerializerMethodField()
 
     class Meta:
         model = News
         # fields = ['title','like_count','dislike_count','Category','avg_like_count']
         fields = ['id', 'title', 'body', 'like_count', 'dislike_count', 'avg_like_count', 'Category', 'tags',
-                  'tags_count']
+                  'tags_count' , 'main_picture_address']
         # در سورس اصلی تغییر کند
         # fields = ['id', 'title', 'body', 'count_like', 'dislike_count', 'avg_like_count', 'Category', 'tags', 'tags_count']
 
@@ -52,6 +52,14 @@ class NewsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['published_at'] = dt.now()
         return super().create(validated_data)
+
+
+    def main_picture_address_new(self, obj: News):
+        if obj.main_picture:
+            return "http://127.0.0.1:8000" + obj.main_picture.url
+        return ''
+
+
 
 # class NewsSerializer(serializers.Serializer):
 # id = serializers.IntegerField()
