@@ -76,6 +76,7 @@ class Comment(models.Model):
 
 class News(models.Model):
     class news_type(models.TextChoices):
+        # UNKNOWN = 'N', 'Unknown'
         IRAN_NEWS = 'IR','IRAN_NEWS'
         WORLD_NEWS = 'WO','WORLD_NEWS'
 

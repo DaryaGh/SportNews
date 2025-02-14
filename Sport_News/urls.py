@@ -2,6 +2,7 @@ from django.urls import path
 # from .views import News_list , News_detail ,Media_list, PhotoGallery_list, Media_detail,PhotoGallery_detail, podcast_detail, podcast_list, contact_list, contact_detail, newspaper_list, newspaper_detail,advertising_list,News_Create,Media_Create,Podcast_Create,PhotoGallery_Create,News_cancel,Change_mode,Home
 from . import views
 
+
 urlpatterns = [
     path('PhotoGallery', views.PhotoGallery_list, name='PhotoGallery_sport'),
     path('PhotoGallery/<int:photogallery_id>', views.PhotoGallery_detail, name='PhotoGallery_detail'),
