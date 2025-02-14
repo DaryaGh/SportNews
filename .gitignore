@@ -2,4 +2,4 @@ uploads
 db.sqlite3
 news
 Sliders
-Sport_News/__pycache__/
+Sport_News/__pycache__/*
