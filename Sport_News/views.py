@@ -389,10 +389,10 @@ def News_Api(request, id):
 
     if request.method == "PUT":
         serializer = NewsSerializer(news, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response({
-                'message': 'Update Successfully'
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'message': 'Update Successfully'
             }, status=status.HTTP_200_OK)
     elif request.method == 'DELETE':
 
