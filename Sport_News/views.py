@@ -1,5 +1,7 @@
 from http.client import HTTPResponse
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
+from django.template.defaultfilters import title
 from pyexpat.errors import messages
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView, Response
@@ -10,7 +12,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.decorators import api_view
 from .models import NewsPaper, Podcast, News, Media, PhotoGallery, ContactUs, Advertising, Comment, Category, Slider, \
-    FileUpload, ReportingAViolation
+    FileUpload, ReportingAViolation, User
 from .forms import NewsForm, MediaForm, PodcastForm, PhotoGalleryForm, FileUploadForm
 from django.urls import reverse
 from django.db.models import Q
@@ -214,17 +216,38 @@ def newspaper_detail(request, newspaper_id):
 
 
 def News_list(request, cat_id=None):
+
+
+    newss = News.objects.filter(is_approved=True)
     if request.method == 'POST':
-        if request.POST['q'] != "":
-            q = request.POST['q']
-            print(News.objects.filter(is_approved=True)
-                  .filter(title__icontains=q)
-                  .order_by('-id'))
+        cat = cat = request.POST.get('search_by_cat', None)
+        # print(request.POST)
+        # print(request.POST['q'])
+        if cat is not None and len(cat) > 0:
+            # cat = request.POST.get('search_by_cat')
+            newss = newss.filter(Category=cat)
+            # print(newss)
+            request.session['search_by_cat'] = int(cat)
+
+        else:
+            if request.session.get('search_by_cat', None)is not None:
+                del request.session['search_by_cat']
+
+
+        if request.POST.get('q', None) is not None:
+            q = request.POST.get('q')
+            newss = newss.filter(title__icontains=q)
+            request.session['q'] = q
+
+        else:
+            if request.session.get('q', None)is not None:
+                del request.session['q']
+
 
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('auth_login'))
 
-    request.session["page_route_name"] = "News_list"
+    # request.session["page_route_name"] = "News_list"
 
     query = request.GET.get('query', None)
 
@@ -234,35 +257,54 @@ def News_list(request, cat_id=None):
     else:
         mode = request.session['mode']
 
+
+
     if cat_id:
-        newss = News.objects.filter(is_approved=True).filter(Category=cat_id).order_by('-id')
-    elif query:
-        request.session['query'] = query
-        q = Q(title__icontains=query) | Q(body__icontains=query)
-        newss = News.objects.filter(q).order_by('-id')
-    elif 'query' in request.session and request.session['query'] is not None:
-        old_query = request.session['query']
-        q = Q(title__icontains=old_query) | Q(body__icontains=old_query)
-        newss = News.objects.filter(q).order_by('-id')
-    else:
-        newss = News.objects.filter(is_approved=True).order_by('-id')
+        newss = newss.filter(Category=cat_id)
+        # newss = (News.objects.filter(is_approved=True)
+        #          .filter(Category=cat_id)
+        #          .order_by('-id'))
 
-    categories = Category.objects.all()
 
-    paginator = Paginator(newss, 3)
+    # elif query:
+    #     request.session['query'] = query
+    #     q = Q(title__icontains=query) | Q(body__icontains=query)
+    #     newss = News.objects.filter(q).order_by('-id')
+    # elif 'query' in request.session and request.session['query'] is not None:
+    #     old_query = request.session['query']
+    #     q = Q(title__icontains=old_query) | Q(body__icontains=old_query)
+    #     newss = News.objects.filter(q).order_by('-id')
+    # else:
+    #     newss = (News.objects.filter(is_approved=True)
+    #              .order_by('-id'))
+
+    newss = newss.order_by('-id')
+
+    categories = Category.objects.all().order_by('title')
+    users = User.objects.all().order_by('first_name')
+
+    paginator = Paginator(newss, 6)
     # print(news.count)
     # print(news.num_pages)
     # print(news.page(3))
     page_number = request.GET.get('p', 1)
     news_with_pagination = paginator.get_page(page_number)
     return render(request, 'Newss.html',
-                  context={'newss': news_with_pagination, 'categories': categories, 'mode': mode})
+                  context={'newss': news_with_pagination, 'categories': categories, 'mode': mode, 'users': users})
 
 
 def News_cancel(request):
-    if 'query' in request.session and request.session['query'] is not None:
-        del request.session['query']
+    # if 'query' in request.session and request.session['query'] is not None:
+    #     del request.session['query']
+    # return HttpResponseRedirect(reverse('News_list'))
+
+    if 'q' in request.session and request.session['q'] is not None:
+        del request.session['q']
+    if 'search_by_cat' in request.session and request.session['search_by_cat']:
+        del request.session['search_by_cat']
+
     return HttpResponseRedirect(reverse('News_list'))
+
 
 
 def News_detail(request, news_id):
