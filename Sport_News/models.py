@@ -76,7 +76,7 @@ class Comment(models.Model):
 
 class News(models.Model):
     class news_type(models.TextChoices):
-        # UNKNOWN = 'N', 'Unknown'
+        UNKNOWN = 'UN', 'UNKNOWN'
         IRAN_NEWS = 'IR','IRAN_NEWS'
         WORLD_NEWS = 'WO','WORLD_NEWS'
 
@@ -90,7 +90,7 @@ class News(models.Model):
     summary = models.TextField(null=True , blank=True)
     is_approved = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
-    news_type = models.CharField(choices=news_type.choices,default=news_type.IRAN_NEWS,max_length=3 , null=True , blank=True)
+    news_type = models.CharField(choices=news_type.choices,default=news_type.UNKNOWN,max_length=3 , null=True , blank=True)
     Category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None , null=True , blank=True)
     createdUsers = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users_0', default=None , null=True , blank=True)
     updatedUsers = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users_1', default=None , null=True , blank=True)
@@ -178,6 +178,7 @@ class Media(models.Model):
         PENDING = 'PN', 'Pending'
 
     class media_type(models.TextChoices):
+        UNKNOWN = 'UN', 'UNKNOWN'
         IRAN_MEDIA = 'IR', 'Iran_Media'
         WORLD_MEDIA = 'WO', 'World_Media'
 
@@ -191,7 +192,7 @@ class Media(models.Model):
     published_at = models.DateTimeField(default=None , null=True , blank=True)
     is_active = models.BooleanField(default=False)
     status = models.CharField(choices=status.choices, default=status.DRAFT, max_length=2 , null=True , blank=True)
-    media_type = models.CharField(max_length=200, choices=media_type.choices, default=media_type.IRAN_MEDIA , null=True , blank=True)
+    media_type = models.CharField(max_length=200, choices=media_type.choices, default=media_type.UNKNOWN , null=True , blank=True)
     Category = models.ForeignKey(Category, on_delete=models.CASCADE, default=None , null=True, blank=True)
     createdUsers = models.ForeignKey(User, on_delete=models.CASCADE, related_name='media_0', default=None , null=True , blank=True)
     updatedUsers = models.ForeignKey(User, on_delete=models.CASCADE, related_name='media_1', default=None , null=True , blank=True)
@@ -326,6 +327,7 @@ class MetaContactUs(models.Model):
 
 class ContactUs(models.Model):
     class related_unit(models.TextChoices):
+        UNKNOWN = 'UN', 'Unknown'
         NEWS = 'NE', 'News'
         MANAGEMENT_SITE = 'MS', 'Management Site'
         VIDEO = 'VD', 'Video'
@@ -340,7 +342,7 @@ class ContactUs(models.Model):
     body = models.TextField(null=True,blank=True)
     published_at = models.DateTimeField(default=None , null=True , blank=True)
     is_approved = models.BooleanField(default=False)
-    related_unit = models.CharField(choices=related_unit.choices, default=related_unit.NEWS, max_length=3 , null=True , blank=True)
+    related_unit = models.CharField(choices=related_unit.choices, default=related_unit.UNKNOWN, max_length=3 , null=True , blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None , null=True , blank=True)
     metacontactus = models.ForeignKey(MetaContactUs, on_delete=models.CASCADE, default=None , null=True , blank=True)
     created_date = models.DateTimeField(auto_now_add=True, editable=False, null=True, blank=True)
