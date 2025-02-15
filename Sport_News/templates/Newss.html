@@ -6,13 +6,11 @@
 {% block main %}
     <h1>News SportNews</h1>
 
-
     <div class="text-center">
         <a href="{% url 'News_Create' %}" class="btn btn-outline-danger">
             Add a New News
         </a>
     </div>
-
     <section class="my-5 card card-body shadow">
         <form class="row g-3" action="{%  url 'News_list' %}" method="POST">
             {% csrf_token %}
@@ -32,10 +30,10 @@
             </div>
             <div class="col-md-4">
                 <label for="search_by_user">User</label>
-                <select class="form-control" name="search_by_user" id="search_by_user">
+                <select class="form-control" name="search_by_user" id="user">
                     <option value="">Select a User.....</option>
                     {% for user in users %}
-                        <option value="{{ user.id }}">{{ user }}</option>
+                        <option value="{{ user.id }}"{% if request.session.search_by_user == user.id %} selected {% endif %}>{{ user}}</option>
                     {% endfor %}
                 </select>
             </div>

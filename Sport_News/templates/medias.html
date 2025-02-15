@@ -11,24 +11,35 @@
     <div class="text-center">
         <a href="{% url 'Media_Create' %}" class="btn btn-outline-danger">Add a New Media</a>
     </div>
-    <section class="my-4">
-        <form class="row g-3" action="{% url 'Media_list' %}" method="POST">
+    <section class="my-5 card card-body shadow">
+        <form class="row g-3" action="{%  url 'Media_list' %}" method="POST">
             {% csrf_token %}
             <div class="col-md-4">
-                <label for="search">Search</label>
-                <input type="text" class="form-control" name="q" id="search">
+                <label for="search">search</label>
+                <input type="text" class="form-control" name="q"
+                       id="search" value="{{ request.session.q }}">
             </div>
             <div class="col-md-4">
-                <label for="search">Category</label>
-                <select class="form-control">
-                    <option>select a category...</option>
+                <label for="category">Category</label>
+                <select class="form-control" id="category" name="search_by_cat">
+                    <option value="">Select a Category .....</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if request.session.search_by_cat == cat.id %} selected {% endif %}>{{ cat }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="col-md-4">
-                <label for="search">Users..</label>
-                <select class="form-control">
-                    <option>select a User...</option>
+                <label for="search_by_user">User</label>
+                <select class="form-control" name="search_by_user" id="search_by_user">
+                    <option value="">Select a User.....</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user }}</option>
+                    {% endfor %}
                 </select>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-secondary">Search</button>
+                <a class="btn btn-danger" href="{% url 'Cancel_Search' %}">Cancel Search</a>
             </div>
         </form>
     </section>
