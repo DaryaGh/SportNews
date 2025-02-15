@@ -32,10 +32,60 @@ def advertising_list(request):
 
 def Media_list(request, cat_id=None):
     request.session["page_route_name"] = "Media_list"
+
+    medias = Media.objects.filter(is_active=True)
+
+    if request.method == 'POST':
+        cat = request.POST.get('search_by_cat', None)
+        # print(request.POST)
+        # print(request.POST['q'])
+        if cat is not None and len(cat) > 0:
+            # cat = request.POST.get('search_by_cat')
+            medias = medias.filter(Category=cat)
+            # print(medias)
+            request.session['search_by_cat'] = int(cat)
+
+        else:
+            if request.session.get('search_by_cat', None) is not None:
+                del request.session['search_by_cat']
+
+
+
+
+        user = request.POST.get('search_by_user', None)
+
+        if user is not None and len(user) > 0:
+            # cat = request.POST.get('search_by_cat')
+            medias = medias.filter(createdUsers=user)
+            # print(medias)
+            request.session['search_by_user'] = int(user)
+
+        else:
+            if request.session.get('search_by_user', None) is not None:
+                del request.session['search_by_user']
+
+
+
+
+
+        if request.POST.get('q', None) is not None:
+            q = request.POST.get('q')
+            medias = medias.filter(title__icontains=q)
+            request.session['q'] = q
+
+        else:
+            if request.session.get('q', None) is not None:
+                del request.session['q']
+
+
+
     if cat_id:
-        medias = Media.objects.filter(is_active=True).filter(Category=cat_id).order_by('-published_at')
-    else:
-        medias = Media.objects.filter(is_active=True).order_by('-published_at')
+        medias = medias.filter(Category=cat_id)
+
+    # if cat_id:
+    #     medias = Media.objects.filter(is_active=True).filter(Category=cat_id).order_by('-published_at')
+    # else:
+    #     medias = Media.objects.filter(is_active=True).order_by('-published_at')
 
     if 'mode' not in request.session:
         request.session['mode'] = 'dark'
@@ -43,9 +93,14 @@ def Media_list(request, cat_id=None):
     else:
         mode = request.session['mode']
 
-    categories = Category.objects.all()
 
-    return render(request, 'medias.html', context={'medias': medias, 'mode': mode, 'categories': categories})
+    medias = medias.order_by('-id')
+
+    categories = Category.objects.all().order_by('title')
+    users = User.objects.all().order_by('first_name')
+
+
+    return render(request, 'medias.html', context={'medias': medias, 'mode': mode, 'categories': categories, 'users': users})
 
 
 def Media_detail(request, media_id):
@@ -77,6 +132,19 @@ def Media_Create(request):
     else:
         form = MediaForm()
         return render(request, 'Media_Create.html', context={'form': form})
+
+
+def Media_cancel(request):
+
+    if 'q' in request.session and request.session['q'] is not None:
+        del request.session['q']
+    if 'search_by_cat' in request.session and request.session['search_by_cat']:
+        del request.session['search_by_cat']
+
+    if 'search_by_user' in request.session and request.session['search_by_user']:
+        del request.session['search_by_user']
+
+    return HttpResponseRedirect(reverse('Media_list'))
 
 
 def PhotoGallery_list(request, cat_id=None):
@@ -127,10 +195,53 @@ def PhotoGallery_Create(request):
 
 
 def podcast_list(request, cat_id=None):
+
+
+    podcasts = Podcast.objects.filter(is_approved=True)
+
+    if request.method == 'POST':
+        cat = request.POST.get('search_by_cat', None)
+        # print(request.POST)
+        # print(request.POST['q'])
+        if cat is not None and len(cat) > 0:
+            # cat = request.POST.get('search_by_cat')
+            podcasts = podcasts.filter(Category=cat)
+            # print(podcasts)
+            request.session['search_by_cat'] = int(cat)
+
+        else:
+            if request.session.get('search_by_cat', None) is not None:
+                del request.session['search_by_cat']
+
+
+
+        user = request.POST.get('search_by_user', None)
+
+        if user is not None and len(user) > 0:
+            # cat = request.POST.get('search_by_cat')
+            podcasts = podcasts.filter(createdUsers=user)
+            # print(podcasts)
+            request.session['search_by_user'] = int(user)
+
+        else:
+            if request.session.get('search_by_user', None) is not None:
+                del request.session['search_by_user']
+
+
+
+
+        if request.POST.get('q', None) is not None:
+            q = request.POST.get('q')
+            podcasts = podcasts.filter(title__icontains=q)
+            request.session['q'] = q
+
+        else:
+            if request.session.get('q', None) is not None:
+                del request.session['q']
+
     if cat_id:
-        podcasts = Podcast.objects.filter(is_approved=True).filter(Category=cat_id)
-    else:
-        podcasts = Podcast.objects.all().order_by('-published_at')
+        podcasts = podcasts.filter(Category=cat_id)
+
 
     if 'mode' not in request.session:
         request.session['mode'] = 'dark'
@@ -138,7 +249,19 @@ def podcast_list(request, cat_id=None):
     else:
         mode = request.session['mode']
 
-    return render(request, 'Podcasts.html', context={'podcasts': podcasts, 'mode': mode})
+    podcasts = podcasts.order_by('-id')
+
+    categories = Category.objects.all().order_by('title')
+    users = User.objects.all().order_by('first_name')
+
+    return render(request, 'podcasts.html',
+                  context={'podcasts': podcasts, 'categories': categories, 'users': users, 'mode': mode})
+
+
+    # if cat_id:
+    #     podcasts = Podcast.objects.filter(is_approved=True).filter(Category=cat_id)
+    # else:
+    #     podcasts = Podcast.objects.all().order_by('-published_at')
 
 
 def podcast_detail(request, podcast_id):
@@ -165,6 +288,18 @@ def Podcast_Create(request):
     else:
         form = PodcastForm()
         return render(request, 'Podcast_Create.html', context={'form': form})
+
+
+def Podcast_cancel(request):
+    if 'q' in request.session and request.session['q'] is not None:
+        del request.session['q']
+    if 'search_by_cat' in request.session and request.session['search_by_cat']:
+        del request.session['search_by_cat']
+
+    if 'search_by_user' in request.session and request.session['search_by_user']:
+        del request.session['search_by_user']
+
+    return HttpResponseRedirect(reverse('Podcast_list'))
 
 
 def contact_list(request):
@@ -219,8 +354,9 @@ def News_list(request, cat_id=None):
 
 
     newss = News.objects.filter(is_approved=True)
+
     if request.method == 'POST':
-        cat = cat = request.POST.get('search_by_cat', None)
+        cat = request.POST.get('search_by_cat', None)
         # print(request.POST)
         # print(request.POST['q'])
         if cat is not None and len(cat) > 0:
@@ -232,6 +368,21 @@ def News_list(request, cat_id=None):
         else:
             if request.session.get('search_by_cat', None)is not None:
                 del request.session['search_by_cat']
+
+
+
+        user = request.POST.get('search_by_user', None)
+
+        if user is not None and len(user) > 0:
+            # cat = request.POST.get('search_by_cat')
+            newss = newss.filter(createdUsers=user)
+            # print(newss)
+            request.session['search_by_user'] = int(user)
+
+        else:
+            if request.session.get('search_by_user', None)is not None:
+                del request.session['search_by_user']
+
 
 
         if request.POST.get('q', None) is not None:
@@ -247,7 +398,10 @@ def News_list(request, cat_id=None):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('auth_login'))
 
-    # request.session["page_route_name"] = "News_list"
+
+
+    request.session["page_route_name"] = "News_list"
+
 
     query = request.GET.get('query', None)
 
@@ -283,7 +437,7 @@ def News_list(request, cat_id=None):
     categories = Category.objects.all().order_by('title')
     users = User.objects.all().order_by('first_name')
 
-    paginator = Paginator(newss, 6)
+    paginator = Paginator(newss, 3)
     # print(news.count)
     # print(news.num_pages)
     # print(news.page(3))
@@ -303,8 +457,10 @@ def News_cancel(request):
     if 'search_by_cat' in request.session and request.session['search_by_cat']:
         del request.session['search_by_cat']
 
-    return HttpResponseRedirect(reverse('News_list'))
+    if 'search_by_user' in request.session and request.session['search_by_user']:
+        del request.session['search_by_user']
 
+    return HttpResponseRedirect(reverse('News_list'))
 
 
 def News_detail(request, news_id):
