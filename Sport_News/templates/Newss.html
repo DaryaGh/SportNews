@@ -13,24 +13,27 @@
         </a>
     </div>
 
-    <section class="my-4">
-        <form class="row g-3" action="{% url 'News_list' %}" method="POST">
+    <section class="my-5">
+        <form class="row g-3" action="{%  url 'News_list' %}" method="POST">
             {% csrf_token %}
             <div class="col-md-4">
-                <label for="search">Search</label>
+                <label for="search">search</label>
                 <input type="text" class="form-control" name="q" id="search">
             </div>
             <div class="col-md-4">
-                <label for="search">Category</label>
+                <label for="">Category</label>
                 <select class="form-control">
-                    <option>select a category...</option>
+                    <option>Select a Category .....</option>
                 </select>
             </div>
             <div class="col-md-4">
-                <label for="search">Users..</label>
+                <label for="">User</label>
                 <select class="form-control">
-                    <option>select a User...</option>
+                    <option>Select a User.....</option>
                 </select>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-secondary">Search</button>
             </div>
         </form>
     </section>
